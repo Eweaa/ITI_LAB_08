@@ -30,24 +30,28 @@
 
             Duration d1 = new(121, 61);
             Console.WriteLine(d1);
-            
+
             Duration d2 = new(69, 121, 61);
             Console.WriteLine(d2);
 
-            Duration d3 = new(3700);
-            Console.WriteLine(d3);
-            
-            Duration d4 = new(7321);
-            Console.WriteLine(d4);
+            Console.WriteLine(d1 > d2);
 
-            Console.WriteLine(d4.Equals(d1));
+            //Duration d3 = new(3700);
+            //Console.WriteLine(d3);
 
-            Duration d5 = new(2, 59, 50);
-            Console.WriteLine(++d5);
+            //Duration d4 = new(7321);
+            //Console.WriteLine(d4);
+
+            //Console.WriteLine(d4.Equals(d1));
+
+            //Duration d5 = new(2, 59, 50);
+            //Console.WriteLine(++d5);
+
+
 
             //Console.WriteLine(d1 + d2 + d3);
 
-            Console.WriteLine(d3 + 120);
+            //Console.WriteLine(d3 + 120);
 
             //Console.WriteLine(MyMath.Divide(6, 5));
 
@@ -171,9 +175,8 @@
 
         class Duration
         {
-            public Duration(int hours = 0, int minutes = 0, int seconds = 0)
+            public Duration(int hours, int minutes, int seconds)
             {
-
 
                 Hours = hours;
                 
@@ -188,46 +191,29 @@
                     Minutes = minutes;
                 }
 
-                if (seconds >= 60)
+                if (seconds >= 3600)
+                {
+                    Hours = seconds / 3600;
+                    int reminderSeconds = seconds % 3600;
+                    Minutes = reminderSeconds / 60;
+                    Seconds = reminderSeconds % 60;
+                }
+                else if (seconds >= 60 && seconds < 3600)
                 {
                     Minutes += seconds / 60;
                     Seconds = seconds % 60;
                 }
-
-                if (seconds < 60)
+                else
                 {
                     Seconds = seconds;
                 }
             }
 
-            public Duration(int minutes = 0, int seconds = 0)
-            {
-
-                if (minutes >= 60)
-                {
-                    Hours = minutes / 60;
-                    Minutes = minutes % 60;
-                }
-
-                if(minutes < 60)
-                {
-                    Minutes = minutes;
-                }
-
-                if(seconds >= 60)
-                {
-                    Minutes += seconds / 60;
-                    Seconds = seconds % 60;
-                }
-
-                if(seconds < 60)
-                {
-                    Seconds = seconds;
-                }
-                
+            public Duration(int minutes, int seconds) : this(0, minutes, seconds)
+            {   
             }
 
-            public Duration(int seconds)
+            public Duration(int seconds) : this(0, 0, seconds)
             {
                 if(seconds >= 3600)
                 {
@@ -242,6 +228,8 @@
             public int Minutes { get; set; }
             public int Seconds { get; set; }
 
+            private int GetSeconds() => Hours * 3600 + Minutes * 60 + Seconds;
+            
             public override string ToString()
             {
                 return $"Hours: {Hours}, Minutes: {Minutes}, Seconds: {Seconds}";
@@ -278,6 +266,7 @@
 
             public static Duration operator ++(Duration d)
             {
+                //return d + 60;
                 if (d.Minutes == 59)
                 {
                     d.Hours += 1;
@@ -287,7 +276,8 @@
                 {
                     d.Minutes++;
                 }
-
+                //Duration newD = d + 60;
+                //return newD;
                 return d;
             }
             
@@ -308,7 +298,17 @@
 
                 return d;
             }
-        } 
+        
+            public static bool operator <(Duration l, Duration r) => l.GetSeconds() < r.GetSeconds();
+            public static bool operator >(Duration l, Duration r) => l.GetSeconds() > r.GetSeconds();
+
+            public static bool operator <=(Duration l, Duration r) => l.GetSeconds() <= r.GetSeconds();
+            public static bool operator >=(Duration l, Duration r) => l.GetSeconds() >= r.GetSeconds();
+
+            public static bool operator ==(Duration l, Duration r) => l.GetSeconds() == r.GetSeconds();
+            public static bool operator !=(Duration l, Duration r) => !(l == r);
+        }
+        
         #endregion
 
         #region Fraction
