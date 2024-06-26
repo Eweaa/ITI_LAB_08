@@ -1,8 +1,4 @@
-﻿using System.Net.Http.Headers;
-using System.Numerics;
-using static Lab_8.Program;
-
-namespace Lab_8
+﻿namespace Lab_8
 {
     internal class Program
     {
@@ -32,8 +28,28 @@ namespace Lab_8
 
             //Console.WriteLine(Fraction.SimplifyFraction(f3));
 
-            Duration d1 = new(61, 40);
+            Duration d1 = new(121, 61);
             Console.WriteLine(d1);
+            
+            Duration d2 = new(69, 121, 61);
+            Console.WriteLine(d2);
+
+            Duration d3 = new(3700);
+            Console.WriteLine(d3);
+            
+            Duration d4 = new(7321);
+            Console.WriteLine(d4);
+
+            Console.WriteLine(d4.Equals(d1));
+
+            Duration d5 = new(2, 59, 50);
+            Console.WriteLine(++d5);
+
+            //Console.WriteLine(d1 + d2 + d3);
+
+            Console.WriteLine(d3 + 120);
+
+            //Console.WriteLine(MyMath.Divide(6, 5));
 
         }
 
@@ -138,35 +154,88 @@ namespace Lab_8
 
         }
         #endregion
+        
+        #region MyMath Static Class
 
+        static class MyMath
+        {
+            public static double Add(double l, double r) => l + r;
+            public static double Subtract(double l, double r) => l - r;
+            public static double Mul(double l, double r) => l * r;
+            public static double Divide(double l, double r) => l / r;
+        }
+
+        #endregion
+
+        #region Duration
 
         class Duration
         {
-            public Duration(int hours, int minutes, int seconds)
+            public Duration(int hours = 0, int minutes = 0, int seconds = 0)
             {
+
+
+                Hours = hours;
                 
+                if (minutes >= 60)
+                {
+                    Hours += minutes / 60;
+                    Minutes = minutes % 60;
+                }
+
+                if (minutes < 60)
+                {
+                    Minutes = minutes;
+                }
+
+                if (seconds >= 60)
+                {
+                    Minutes += seconds / 60;
+                    Seconds = seconds % 60;
+                }
+
+                if (seconds < 60)
+                {
+                    Seconds = seconds;
+                }
             }
 
-            public Duration(int minutes, int seconds)
+            public Duration(int minutes = 0, int seconds = 0)
             {
 
-                if(minutes >= 60)
+                if (minutes >= 60)
                 {
                     Hours = minutes / 60;
                     Minutes = minutes % 60;
-                    Seconds = seconds;
-                }
-                else
-                {
-                    Minutes = minutes;
-                    Seconds = seconds;
                 }
 
+                if(minutes < 60)
+                {
+                    Minutes = minutes;
+                }
+
+                if(seconds >= 60)
+                {
+                    Minutes += seconds / 60;
+                    Seconds = seconds % 60;
+                }
+
+                if(seconds < 60)
+                {
+                    Seconds = seconds;
+                }
                 
             }
 
             public Duration(int seconds)
             {
+                if(seconds >= 3600)
+                {
+                    Hours = seconds / 3600;
+                    int reminderSeconds = seconds % 3600;
+                    Minutes = reminderSeconds / 60;
+                    Seconds = reminderSeconds % 60;
+                }
             }
 
             public int Hours { get; set; }
@@ -177,7 +246,70 @@ namespace Lab_8
             {
                 return $"Hours: {Hours}, Minutes: {Minutes}, Seconds: {Seconds}";
             }
-        }
+
+            public override bool Equals(object? obj)
+            {
+                Duration? d = obj as Duration;
+
+                if (obj is Duration)
+                {
+                    if (Hours == d.Hours && Minutes == d.Minutes && Seconds == d.Seconds)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return false;
+            }
+
+            public static Duration operator+(Duration l, Duration r) 
+                => new Duration(l.Hours + r.Hours, l.Minutes + r.Minutes, l.Seconds + r.Seconds);
+            
+            public static Duration operator+(Duration l, int r)
+            {
+                Duration added = new(r);
+                return l + added;
+            }
+
+            public static Duration operator +(int l, Duration r) => r + l;
+
+            public static Duration operator ++(Duration d)
+            {
+                if (d.Minutes == 59)
+                {
+                    d.Hours += 1;
+                    d.Minutes = 0;
+                }
+                else
+                {
+                    d.Minutes++;
+                }
+
+                return d;
+            }
+            
+            public static Duration operator --(Duration d)
+            {
+                if (d.Minutes == 0)
+                {
+                    if(d.Hours != 0)
+                    {
+                        d.Hours -= 1;
+                        d.Minutes = 59;
+                    }
+                }
+                else
+                {
+                    d.Minutes--;
+                }
+
+                return d;
+            }
+        } 
+        #endregion
 
         #region Fraction
 
@@ -293,10 +425,7 @@ namespace Lab_8
                 return (l.Denominator == r.Denominator && l.Numerator == r.Numerator);
             }
 
-            public static bool operator !=(Fraction l, Fraction r)
-            {
-                return !(l == r);
-            }
+            public static bool operator !=(Fraction l, Fraction r) => !(l == r);
 
             public static Fraction operator ++(Fraction f)
             {
@@ -305,6 +434,14 @@ namespace Lab_8
 
                 return Added + f;
             }
+
+            public static Fraction operator+(Fraction l, int r)
+            {
+                return new  Fraction(l.Numerator + r * l.Denominator, l.Denominator);
+            }
+
+            public static Fraction operator+(int l, Fraction r) => r + l;
+
         } 
         #endregion
     }

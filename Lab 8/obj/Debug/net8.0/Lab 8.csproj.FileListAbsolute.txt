@@ -12,3 +12,4 @@ C:\Users\youse\source\repos\Lab 8\Lab 8\obj\Debug\net8.0\refint\Lab 8.dll
 C:\Users\youse\source\repos\Lab 8\Lab 8\obj\Debug\net8.0\Lab 8.pdb
 C:\Users\youse\source\repos\Lab 8\Lab 8\obj\Debug\net8.0\Lab 8.genruntimeconfig.cache
 C:\Users\youse\source\repos\Lab 8\Lab 8\obj\Debug\net8.0\ref\Lab 8.dll
+C:\Users\youse\source\repos\Lab 8\Lab 8\obj\Debug\net8.0\Lab 8.sourcelink.json
